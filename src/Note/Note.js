@@ -32,6 +32,8 @@ function deleteItem(props){
 
 
 export default function Note(props) {
+
+
   return (
     <DeleteContext.Consumer>
       {(context) => 
@@ -64,4 +66,8 @@ export default function Note(props) {
     }
     </DeleteContext.Consumer>
   )
+}
+
+Note.defaultProps={
+  onClickDelete: () => {},
 }
