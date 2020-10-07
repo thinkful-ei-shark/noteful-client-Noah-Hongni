@@ -8,6 +8,8 @@ import NotePageMain from '../NotePageMain/NotePageMain';
 import dummyStore from '../dummy-store';
 import {getNotesForFolder, findNote, findFolder} from '../notes-helpers';
 import './App.css';
+import deleteContext from './delteContext';
+
 
 class App extends Component {
     state = {
@@ -15,13 +17,16 @@ class App extends Component {
         folders: []
     };
 
+    //handleDelete function
+
+
+
     componentDidMount() {
         // fake date loading from API call
         setTimeout(() => this.setState(dummyStore), 600);
     }
 
     renderNavRoutes() {
-        const {notes, folders} = this.state;
         return (
             <>
                 {['/', '/folder/:folderId'].map(path => (
@@ -29,23 +34,12 @@ class App extends Component {
                         exact
                         key={path}
                         path={path}
-                        render={routeProps => (
-                            <NoteListNav
-                                folders={folders}
-                                notes={notes}
-                                {...routeProps}
-                            />
-                        )}
+                        component={NoteListNav}
                     />
                 ))}
                 <Route
                     path="/note/:noteId"
-                    render={routeProps => {
-                        const {noteId} = routeProps.match.params;
-                        const note = findNote(notes, noteId) || {};
-                        const folder = findFolder(folders, note.folderId);
-                        return <NotePageNav {...routeProps} folder={folder} />;
-                    }}
+                    component={NotePageNav}  
                 />
                 <Route path="/add-folder" component={NotePageNav} />
                 <Route path="/add-note" component={NotePageNav} />
@@ -54,7 +48,6 @@ class App extends Component {
     }
 
     renderMainRoutes() {
-        const {notes, folders} = this.state;
         return (
             <>
                 {['/', '/folder/:folderId'].map(path => (
@@ -62,35 +55,26 @@ class App extends Component {
                         exact
                         key={path}
                         path={path}
-                        render={routeProps => {
-                            const {folderId} = routeProps.match.params;
-                            const notesForFolder = getNotesForFolder(
-                                notes,
-                                folderId
-                            );
-                            return (
-                                <NoteListMain
-                                    {...routeProps}
-                                    notes={notesForFolder}
-                                />
-                            );
-                        }}
+                        component={NoteListMain}
                     />
                 ))}
                 <Route
                     path="/note/:noteId"
-                    render={routeProps => {
-                        const {noteId} = routeProps.match.params;
-                        const note = findNote(notes, noteId);
-                        return <NotePageMain {...routeProps} note={note} />;
-                    }}
+                    component={NotePageMain}
                 />
             </>
         );
     }
 
     render() {
-        return (
+        // create a context value for deleteContext
+        const contextValue = {
+            folders: this.state.folders,
+            notes: this.state.notes,
+            deleteNote: this.deleteNote
+        }
+        return (  
+            <deleteContext.Provider value={contextValue}> 
             <div className="App">
                 <nav className="App__nav">{this.renderNavRoutes()}</nav>
                 <header className="App__header">
@@ -101,7 +85,9 @@ class App extends Component {
                 </header>
                 <main className="App__main">{this.renderMainRoutes()}</main>
             </div>
+            </deleteContext.Provider>
         );
+        
     }
 }
 
