@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom'
 import { format } from 'date-fns'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './Note.css'
-import DeleteContext from './DeleteContext'
+import DeleteContext from '../DeleteContext'
 
 
-function deleteItem(noteId, cb){
-  fetch(`/${noteId}`, {
+
+function deleteItem(props){
+  fetch(`http://localhost:9090/notes/${props.id}`, {
     method: 'DELETE',
     headers: {
       'content-type': 'application/json'
@@ -23,7 +24,6 @@ function deleteItem(noteId, cb){
     })
     .then(data => {
       console.log({data})
-      cb(noteId)
     })
     .catch(error=>{
       console.log(error)

@@ -7,7 +7,7 @@ import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
 import dummyStore from '../dummy-store';
 import './App.css';
-import DeleteContext from '../DelteContext';
+import DeleteContext from '../DeleteContext';
 
 
 class App extends Component {
