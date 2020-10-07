@@ -6,9 +6,8 @@ import NotePageNav from '../NotePageNav/NotePageNav';
 import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
 import dummyStore from '../dummy-store';
-import {getNotesForFolder, findNote, findFolder} from '../notes-helpers';
 import './App.css';
-import deleteContext from './delteContext';
+import DeleteContext from '../DelteContext';
 
 
 class App extends Component {
@@ -17,7 +16,14 @@ class App extends Component {
         folders: []
     };
 
-    //handleDelete function
+    handleDeleteNote = noteId => {
+        console.log(noteId)
+        const newNote = this.state.notes.filter(note =>
+            note.id !== noteId)
+        this.setState({
+            notes: newNote
+        })
+    }
 
 
 
@@ -71,21 +77,21 @@ class App extends Component {
         const contextValue = {
             folders: this.state.folders,
             notes: this.state.notes,
-            deleteNote: this.deleteNote
+            deleteNote: this.handleDeleteNote
         }
         return (  
-            <deleteContext.Provider value={contextValue}> 
-            <div className="App">
-                <nav className="App__nav">{this.renderNavRoutes()}</nav>
-                <header className="App__header">
-                    <h1>
-                        <Link to="/">Noteful</Link>{' '}
-                        <FontAwesomeIcon icon="check-double" />
-                    </h1>
-                </header>
-                <main className="App__main">{this.renderMainRoutes()}</main>
-            </div>
-            </deleteContext.Provider>
+            <DeleteContext.Provider value={contextValue}> 
+                <div className="App">
+                    <nav className="App__nav">{this.renderNavRoutes()}</nav>
+                    <header className="App__header">
+                        <h1>
+                            <Link to="/">Noteful</Link>{' '}
+                            <FontAwesomeIcon icon="check-double" />
+                        </h1>
+                    </header>
+                    <main className="App__main">{this.renderMainRoutes()}</main>
+                </div>
+            </DeleteContext.Provider>
         );
         
     }
